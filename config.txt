@@ -1,0 +1,7 @@
+DBname = "orthomcl_1510"
+Password = "orthomcl"
+User = "orthomcl"
+Host = "head.net0.pyxis.ripcm.com"
+
+maxLengthVar = 0.2
+PanCorePermutations = 10
