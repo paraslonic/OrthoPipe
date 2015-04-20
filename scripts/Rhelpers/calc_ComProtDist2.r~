@@ -1,0 +1,79 @@
+# calculate m. alignment, tree and dist with common genes who can be of different length. by each gene and median values
+# second part in comPtorDist_byGene.r = change names!
+# input: cdsClusters, clustersLength table
+# out: 
+
+library("RMySQL")
+library("abind")
+library("gplots")
+
+source("../config.txt")
+con <- dbConnect(MySQL(), user="root", password="111111", dbname=DBname)
+maxCommonGenesLengthVariation = 0.5
+# select them
+
+strains = dbGetQuery(con, "select distinct(strain) as strains from cds")
+strains = strains$strains; strains.count = length(strains)
+
+comand = paste("select cluster, min(nlength) as minl, max(nlength) as maxl from cdsClusters where strains =", strains.count," and genes =", strains.count, "group by cluster")
+clusters <- dbGetQuery(con, comand)
+clusters <- subset(clusters, (maxl - minl)/minl < 0.01)
+clusters = clusters$cluster; 
+clusters.count = length(clusters)
+
+dist.matrices = list()
+
+for (i in 1:clusters.count)
+{
+  clust = clusters[i]
+  clust.name = gsub(":","", clust)
+  clust.fname = paste(gsub(":","", clust),".txt",sep="")
+  # create a fasta file with each cds from cluster
+  system(paste("rm ",clust.fname,sep=""),ignore.stderr=T)
+  for(j in 1:strains.count)
+  {
+    strain = strains[j]
+    seq <- dbGetQuery(con,paste("select nseq from cdsClusters where cluster = '",clust,"' and strain='", strain, "';", sep=""))  
+    seq = seq$nseq[1]
+    system(paste('echo ">',strain,'" >> ',clust.fname,sep=""))
+    system(paste("echo ",seq," >> ",clust.fname, sep=""))
+  }
+  clust.alname = paste(gsub(":","", clust),".alseq",sep="")
+  clust.distname = paste(gsub(":","", clust),".dnadist",sep="")
+  # align and calc dist 
+  system(paste("emma -sequence ", clust.fname ," -outseq ",clust.alname," -dendoutfile qu.dnd"))
+  system(paste("fdnadist -sequence ", clust.alname ," -outfile  ",clust.distname,"  -method f "))
+  system(paste("bash helpers/ph2mat.sh", clust.distname,"out"))
+  o <- read.delim("out",sep=" ", header=F, as.is = T)  
+  rownames(o) = o$V1
+  o <- o[,-1]
+  colnames(o) = rownames(o)
+  o <- o[,order(colnames(o), sort(colnames(o)))]
+  o <- o[order(rownames(o), sort(rownames(o))),]
+  print(paste("i =",i, "of", clusters.count))
+  dist.matrices[[clust.name]] = o
+}
+
+save(dist.matrices, file="dist.matrices.rdat")
+ogs <- names(dist.matrices)
+# aggregate
+dist.matrices <- lapply(dist.matrices, as.matrix)
+dist.matrices.3dim <- abind(dist.matrices, along=3)
+median.dist <- apply(dist.matrices.3dim, c(1,2), median)
+mean.dist <- apply(dist.matrices.3dim, c(1,2), mean)
+
+heatmap.2(as.matrix(mean.dist), trace="none",margin=c(8,8), 
+          keysize=1, main = "common genes nucleotide dist. ML tree")
+
+
+median.dist <- apply(dist.matrices.3dim, c(1,2), median)
+mean.dist <- apply(dist.matrices.3dim, c(1,2), mean)
+
+write.table(dist.mat, "dist.mat", quote=F, sep="\t")
+system("mkdir -p geneAlignments")
+system("mv *.alseq *.dnadist *.txt geneAlignments; rm qu.dnd", ignore.stderr=T)
+
+# plot
+View(dist.mat)
+heatmap.2(as.matrix(dist.mat),trace="none",margin=c(8,8), main = "All common genes similarity\n(ML tree)",dendrogram="row")
+

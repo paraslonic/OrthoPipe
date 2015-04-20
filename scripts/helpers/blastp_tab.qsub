@@ -1,0 +1,1 @@
+blastp -db goodProteins.fasta -query $1 -outfmt 6 -out $1.out -num_threads 4

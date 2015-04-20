@@ -1,0 +1,49 @@
+library("RMySQL")
+source("../config.txt")
+con <- dbConnect(MySQL(), user=User, password=Password, dbname=DBname)
+
+
+dbGetQuery(con, "create view sameLengthClusters as select clusters.cluster, clusterSize.strains as strains, clusterSize.genes as genes, min(cds.nlength) as minl, max(cds.nlength) as maxl from clusters, clusterSize, cds where cds.strain = clusters.strain and cds.id = clusters.id and clustSize.cluster = clusters.cluster and strains = 15 and genes = 15 group by clusters.cluster having minl = maxl;")
+dbGetQuery(con, "alter table sameLengthClusters add primary key (cluster);")
+
+strains <- dbGetQuery(con, "select distinct strain from clusters;")
+
+for (i in 1:length(strains$strain))
+{
+  strain = strains$strain[i]
+  s = paste("/tmp/", strains$strain[i],"_cdss.txt",sep="")
+  dbGetQuery(con,paste("select seq from cdsnucClusters where cluster in (select cluster from sameLengthClusters) and strain='", strain, "' order by cluster into outfile '", s,"';", sep=""))
+  system("cp /tmp/*_cdss.txt /home/manolov/proj/pstutzeri/Distances/commonGenesDistPokka") 
+}
+
+# prepare common cds and run dnadist
+system ("for f in *_cdss.txt; do bash linearize.sh $f; done")
+system("cat *_cdss.fasta > strains.fasta")
+system("fdnadist -sequence strains.fasta -outfile ph_out -method j")
+system("bash ph2mat.sh ph_out out.mat")
+system("mkdir -p cdss; mv *_cdss* cdss")
+
+d <- read.delim("out.mat", sep = " ", head = F, as.is = T)
+rownames(d) <- d[, 1]; d <- d[, -1]; colnames(d) <- rownames(d)
+head(d)
+
+# make and import dnaml tree
+system("fdnaml -sequence strains.fasta -outfile dnaml_out.txt -intreefile ''")
+dnml.tree <- read.tree("strains.treefile")
+dnml.tree <- multi2di(dnml.tree)
+dnml.tree <- midpoint(dnml.tree)
+dnml.tree <- chronos(dnml.tree)
+dnml.tree <- as.dendrogram(as.hclust(dnml.tree))
+
+# make same order 
+orders <- order.dendrogram(dnml.tree)
+labs <- labels(dnml.tree)
+pos <- data.frame(labs, orders)
+pos <- pos[order(pos$orders),]
+new_order = match(pos$labs,colnames(d))
+d <- d[new_order, new_order ]
+
+# plot
+heatmap.2(as.matrix(d),trace="none",margin=c(8,8), main = "Common genes similarity\n(ML tree)",dendrogram="row",
+          Rowv=dnml.tree, Colv=dnml.tree, keysize=1.5 )
+
