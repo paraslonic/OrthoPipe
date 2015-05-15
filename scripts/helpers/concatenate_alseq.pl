@@ -3,6 +3,16 @@ use Bio::SeqIO;
 
 print "running concatenate_alseq.pl\n";
 
+open S, "<tmp/strains.txt";
+$i = 1;
+
+while(<S>){
+	chomp;
+	next if(/^strains$/);
+	$strains{$i} = $_;
+	$i++;	
+}
+
 $dir = "tmp/coreGenes"; 
 opendir(DIR, $dir);
 my @files = readdir DIR;
@@ -26,13 +36,17 @@ foreach $fn (@files)
 $outdir = "tmp/coreGenes/concatenatedGenes";
 `mkdir -p $outdir `;
 print "\nstrains:\n";
+open O, ">core.fasta";
+open ON, ">coreNamed.fasta";
 foreach $strain(keys %Sequences)
 {
 	$strain =~ s/\.alseq//;
 	print "$strain\n";
-	open O, ">", "$outdir/$strain.fasta";
+	print ON ">$strains{$strain}\n";
+	print ON $Sequences {$strain} . "\n";
 	print O ">$strain\n";
 	print O $Sequences {$strain} . "\n";
 }
+close(O);
 
 

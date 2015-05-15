@@ -13,7 +13,7 @@ con <- dbConnect(MySQL(), user=User, password=Password, dbname=DBname)
 
 strains = dbGetQuery(con, "select distinct(strain) as strains from cds")
 system("mkdir -p tmp")
-write.table(strains,"tmp/strains.txt")
+write.table(strains,"tmp/strains.txt", quote = F, row.names = FALSE)
 strains = strains$strains; 
 
 strains.count = length(strains)

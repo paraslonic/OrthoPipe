@@ -9,7 +9,6 @@ library("phangorn")
 system("perl helpers/concatenate_alseq.pl")
 
 # build ML tree
-system("cat tmp/coreGenes/concatenatedGenes/*.fasta > tmp/coreGenes/concatenatedGenes/core.fasta")
 system("fdnaml -sequence tmp/coreGenes/concatenatedGenes/core.fasta -outfile tmp/dnamlCoreOut.txt -intreefile ''")
 system("mkdir -p ../results")
 system("mv core.treefile ../results/CoreGenesMLTree.nwk")

@@ -2,14 +2,13 @@ use DBI;
 use Bio::SeqIO;
 
 # .........................................................................................................................  
-print "adding clusters to DB\n" ;
 $DBname = ""; $password = ""; $user = "";
 open (F, "<", "../config.txt");
-
 while (<F>){
-	if($_ =~ /DBname\s+=\s+"(\w*)"/ )	{ $DBname = $1 };
-	if($_ =~ /User\s+=\s+"(\w*)"/ ) 	{ $user = $1 };
-	if($_ =~ /Password\s+=\s+"(\w*)"/ )	{ $password = $1 };
+        if($_ =~ /DBname\s+=\s+"(\w*)"/ )       { $DBname = $1 };
+        if($_ =~ /User\s+=\s+"(\w*)"/ )         { $user = $1 };
+        if($_ =~ /Password\s+=\s+"(\w*)"/ )     { $password = $1 };
+        if($_ =~ /Host\s+=\s+"([\w\.]*)"/ )     { $host = $1 };
 }
 
 $file = shift or $file = "../ortho/named_groups.txt";
@@ -39,7 +38,7 @@ print "done.\n" ;
 
 
 sub connectDB{
- 	$dbConnectString="dbi:mysql:".$DBname.":mysql_local_infile=1:localhost";
+ 	$dbConnectString="dbi:mysql:".$DBname.":$host".":mysql_local_infile=1:localhost";
 	$dbLogin=$user;
 	print "($dbConnectString, $dbLogin, $password)";	
 	$dbh = DBI->connect($dbConnectString, $dbLogin, $password) or die "Could not connect to database: $DBI::errstr";
