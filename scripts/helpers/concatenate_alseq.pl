@@ -23,8 +23,7 @@ print "\nclusters:\n";
 foreach $fn (@files)
 {
 	next until($fn =~ /\.alseq/);
-	#last if($i++ > 3);
-	print "$fn\n";
+	#print "$fn\n";
 	$inseq = Bio::SeqIO->new(-file => "$dir/$fn",  -format => "fasta");
 	while($seq = $inseq->next_seq)
 	{
@@ -36,8 +35,8 @@ foreach $fn (@files)
 $outdir = "tmp/coreGenes/concatenatedGenes";
 `mkdir -p $outdir `;
 print "\nstrains:\n";
-open O, ">core.fasta";
-open ON, ">coreNamed.fasta";
+open O, ">$outdir/core.fasta";
+open ON, ">$outdir/coreNamed.fasta";
 foreach $strain(keys %Sequences)
 {
 	$strain =~ s/\.alseq//;
