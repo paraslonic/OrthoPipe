@@ -19,7 +19,7 @@ write.table(dists.median, "../results/distance/CoreGenesDistance.txt", sep = "\t
 # make normal names
 colnames(dists.median) <-  gsub("_",' ', colnames(dists.median))
 rownames(dists.median) <-  gsub("_",' ', rownames(dists.median))
-strains = read.table("tmp/strains.txt", as.is = T) 
+strains = read.delim("tmp/strains.txt", as.is = T)
 strains$strains = gsub("_",' ',strains$strains)
 
 cex = 0.8
