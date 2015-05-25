@@ -1,7 +1,8 @@
-DBname = "orthomcl_1510"
+DBname = "orthomcl_321"
 Password = "orthomcl"
 User = "orthomcl"
 Host = "head.net0.pyxis.ripcm.com"
+Port = "3306"
 
 maxLengthVar = 0.2
 PanCorePermutations = 10
