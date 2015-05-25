@@ -9,8 +9,8 @@ while (<F>){
 }
 
 print "\nwill create $DBname on $host\n";
-`mysql -u $user -p$password -e 'drop database if exists $DBname' --host $host`;
-`mysql -u $user -p$password -e 'create database $DBname' --host $host`; 
+`mysql -u $user -p$password -e 'drop database if exists $DBname' --host $host --port $port`;
+`mysql -u $user -p$password -e 'create database $DBname' --host $host --port $port`; 
 
 # make config file for OMCL
 open C, "<helpers/db.config_fish";
