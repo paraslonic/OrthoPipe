@@ -1,12 +1,12 @@
-$dir = shift;
 $_ = shift;
 
-if(/-/){ 
+if(/[^0-9A-Za-z_]/){ 
 	$old = $_; 
-	s/-/_/g;
-	s/\..*/\.fasta/g;
+	s/[^0-9A-Za-z_.\/]/_/g;
 	$new =$_;
-	print "$old -> $new\n";
-	`mv $dir/$old $dir/$new`; 
+	if($new != $old) { 
+		print "$old -> $new\n";
+		`mv $old $new` 
+	} 
 }
    

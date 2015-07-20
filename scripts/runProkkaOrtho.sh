@@ -3,15 +3,18 @@ echo "genome fastas:" >> log; find ../fasta -name "*.fasta" | wc -l >> log
 #
 ## 1. Prokka
 bash helpers/prokkaloop.sh
-echo "prokka built gbf-s: " >> log; find ../prokka -name "*.gbf" | wc -l >> log
+echo "genebank files in prokka dir: " >> log; find ../prokka -name "*.gb*" | wc -l >> log
 #
 mkdir -p ../gb
-find ../prokka -name "*.gbf" -exec cp {} ../gb/ \;
+find ../prokka -name "*.gb*" -exec cp {} ../gb/ \;
 #
+echo "genebank files in gb dir: " >> log; find ../gb/ -name "*.gb*" | wc -l >> log
 mkdir -p ../prokka/faa
 for i in ../gb/*.gb*
 do
+	perl helpers/normalizeNames.pl $i
 	name=$(basename "$i"); name="${name%.*}"
+	echo "$name"
 	perl helpers/GB2faa.pl $i  > ../prokka/faa/$name.fasta
 done
 
