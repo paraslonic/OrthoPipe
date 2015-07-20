@@ -1,4 +1,4 @@
-open O, ">helpers.db.config";
+open O, ">helpers/db.config";
 
 print O "dbVendor=mysql 
 dbConnectString=dbi:mysql:$DBname:$host:$port
