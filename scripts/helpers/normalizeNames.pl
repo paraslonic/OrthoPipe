@@ -1,10 +1,12 @@
 $_ = shift;
 
-if(/[^0-9A-Za-z_]/){ 
+if(/[^a-zA-Z0-9_.\/]/){
+	print "strange symbol in $_\n"; 
 	$old = $_; 
-	s/[^0-9A-Za-z_.\/]/_/g;
+	s/[^a-zA-Z0-9_.\/]/_/g;
 	$new =$_;
-	if($new != $old) { 
+	if($new ne $old)
+	{ 
 		print "$old -> $new\n";
 		`mv $old $new` 
 	} 
