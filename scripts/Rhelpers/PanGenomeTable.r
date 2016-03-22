@@ -1,6 +1,10 @@
 # input: cdsClusters table; ../ortho/ortho_table.txt
 # output: ../results/pan.table.txt
 
+#### Problem often happens: table is not created. Why? 
+#### 2DO: add statistics: how many genes have homology, how many genes have homology to nearest genome?
+
+
 library("RMySQL")
 
 source("../config.txt")

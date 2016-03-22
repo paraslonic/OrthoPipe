@@ -1,0 +1,45 @@
+
+will create orthomcl_321 on head.net0.pyxis.ripcm.com
+acquiring genes from NCC2705.fasta
+acquiring genes from BBMN68_.fasta
+acquiring genes from DJO10A.fasta
+acquiring genes from *.fasta
+'*.fasta' is not in 'taxon.fasta' format
+DBD::mysql::st execute failed: The used command is not allowed with this MySQL version at /data4/bio/runs-ms/soft/OrthoMCL/bin/orthomclLoadBlast line 39, <F> line 12.
+[mclxIOstreamIn] no assignments yield void/empty matrix
+[mcl] new tab created
+___ [mclAlgorithmStart] attempting to cluster the void
+[mcl] pid 22557
+ ite   chaos  time hom(avg,lo,hi) expa expb expc fmv
+  1     0.00  0.00 0.00/340282346638528859811704183484516925440.00/0.00 0.00 0.00 0.00 -2147483648
+[mcl] jury pruning marks: <100,100,100>, out of 100
+[mcl] jury pruning synopsis: <100.0 or really really really good> (cf -scheme, -do log)
+[mcl] output is in groups.txt
+[mcl] 0 clusters found
+[mcl] output is in groups.txt
+
+Please cite:
+    Stijn van Dongen, Graph Clustering by Flow Simulation.  PhD thesis,
+    University of Utrecht, May 2000.
+       (  http://www.library.uu.nl/digiarchief/dip/diss/1895620/full.pdf
+       or  http://micans.org/mcl/lit/svdthesis.pdf.gz)
+OR
+    Stijn van Dongen, A cluster algorithm for graphs. Technical
+    Report INS-R0010, National Research Institute for Mathematics
+    and Computer Science in the Netherlands, Amsterdam, May 2000.
+       (  http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z
+       or  http://micans.org/mcl/lit/INS-R0010.ps.Z)
+
+
+will create orthomcl_321 on head.net0.pyxis.ripcm.com
+acquiring genes from NCC2705.fasta
+acquiring genes from BBMN68_.fasta
+acquiring genes from DJO10A.fasta
+acquiring genes from *.fasta
+'*.fasta' is not in 'taxon.fasta' format
+[mclxIOstreamIn] no assignments yield void/empty matrix
+[mcl] new tab created
+___ [mclAlgorithmStart] attempting to cluster the void
+[mcl] pid 7445
+ ite   chaos  time hom(avg,lo,hi) expa expb expc fmv
+  1  runOrtho.sh: line 16:  7445 Segmentation fault      (core dumped) mcl mclInput --abc -I 1.5 -o groups.txt

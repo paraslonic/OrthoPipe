@@ -9,7 +9,7 @@ library("RMySQL")
 library("gplots")
 
 source("../config.txt")
-con <- dbConnect(MySQL(), user=User, password=Password, dbname=DBname)
+con <- dbConnect(MySQL(), user=User, password=Password, dbname=DBname, host=Host, port=3306)
 
 strains = dbGetQuery(con, "select distinct(strain) as strains from cds")
 system("mkdir -p tmp")
@@ -49,7 +49,7 @@ for (i in 1:clusters.count)
   clust.distname = paste("tmp/coreGenes/",gsub(":","", clust),".dnadist",sep="")
   # align and calc dist 
   system(paste("emma -sequence ", clust.fname ," -outseq ",clust.alname," -dendoutfile qu.dnd"))
-  system(paste("fdnadist -sequence ", clust.alname ," -outfile  ",clust.distname,"  -method f "))
+  system(paste("fdnadist -sequence $(pwd)/", clust.alname ," -outfile  $(pwd)/",clust.distname,"  -method f ", sep=""))
   system(paste("bash helpers/ph2mat.sh", clust.distname,"tmp/coreGenes/out"))
   o <- read.delim("tmp/coreGenes/out",sep=" ", header=F, as.is = T)  
   rownames(o) = strains[o$V1]

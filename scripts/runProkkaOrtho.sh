@@ -1,5 +1,8 @@
 echo "start" > log
 echo "genome fastas:" >> log; find ../fasta -name "*.fasta" | wc -l >> log
+
+for f in ../fasta/*; do  perl helpers/normalizeNames.pl "$f"; done
+perl helpers/fastaIdLengthRepair.pl
 #
 ## 1. Prokka
 bash helpers/prokkaloop.sh

@@ -11,6 +11,7 @@ Rscript Rhelpers/PopulateDB.r
 Rscript Rhelpers/SelectCoreGenes.r
 
 Rscript Rhelpers/CoreGenesAlignment.r
+Rscript Rhelpers/plotGenesStrainsBarplot.r
 Rscript Rhelpers/PanGenomeTable.r
 Rscript Rhelpers/CoreGenesMLTree.r
 
