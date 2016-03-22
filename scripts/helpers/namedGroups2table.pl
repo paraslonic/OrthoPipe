@@ -41,7 +41,7 @@ foreach $clust ( keys %clust){
 	my $count = 0;
 	for (@strains) {
  		$strain_string .= (exists $clust{$clust}{$_}? $clust{$clust}{$_} : 0) . "\t";
- 		$strain_string_id .= (exists $clust{$clust}{$_}? $clust{$clust}{$_."_id"} : 0) . "\t";
+ 		$strain_string_id .= (exists $clust{$clust}{$_}? $clust{$clust}{$_."_id"} : "") . "\t";
  		$count += exists $clust{$clust}{$_}? 1 : 0;
 	}
 	print T "$strain_string$count\n";
